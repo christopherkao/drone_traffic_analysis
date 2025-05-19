@@ -11,17 +11,17 @@ import supervision as sv
 COLORS = sv.ColorPalette.from_hex(["#E6194B", "#3CB44B", "#FFE119", "#3C76D1"])
 
 ZONE_IN_POLYGONS = [
-    np.array([[592, 282], [900, 282], [900, 82], [592, 82]]),
-    np.array([[950, 860], [1250, 860], [1250, 1060], [950, 1060]]),
-    np.array([[592, 582], [592, 860], [392, 860], [392, 582]]),
-    np.array([[1250, 282], [1250, 530], [1450, 530], [1450, 282]]),
+    np.array([[1956, 1002], [2013, 961], [1813, 866], [1749, 907]]),
+    np.array([[2431, 880], [2310, 838], [2469, 609], [2577, 641]]),
+    np.array([[2305, 1613], [2234, 1893], [2449, 1937], [2480, 1581]]),
+    np.array([[1777, 1532], [1587, 1658], [1687, 1802], [1911, 1677]]),
 ]
 
 ZONE_OUT_POLYGONS = [
-    np.array([[950, 282], [1250, 282], [1250, 82], [950, 82]]),
-    np.array([[592, 860], [900, 860], [900, 1060], [592, 1060]]),
-    np.array([[592, 282], [592, 550], [392, 550], [392, 282]]),
-    np.array([[1250, 860], [1250, 560], [1450, 560], [1450, 860]]),
+    np.array([[2196, 873], [2045, 931], [1806, 801], [1856, 763]]),
+    np.array([[2482, 880], [2635, 685], [2795, 726], [2662, 929]]),
+    np.array([[2063, 1747], [1964, 2013], [2176, 2004], [2287, 1626]]),
+    np.array([[1664, 1395], [1483, 1482], [1560, 1608], [1768, 1514]]),
 ]
 
 
@@ -30,6 +30,9 @@ class DetectionsManager:
         self.tracker_id_to_zone_id: Dict[int, int] = {}
         self.counts: Dict[int, Dict[int, Set[int]]] = {}
 
+    # Updates the class_id for detections based on the zones they are in
+    # Also keeps track of the counts of detections in each out zone based on 
+    # the in zone theu came from
     def update(
         self,
         detections_all: sv.Detections,
@@ -38,11 +41,13 @@ class DetectionsManager:
     ) -> sv.Detections:
         for zone_in_id, detections_in_zone in enumerate(detections_in_zones):
             for tracker_id in detections_in_zone.tracker_id:
+                # TODO: Track entry time
                 self.tracker_id_to_zone_id.setdefault(tracker_id, zone_in_id)
 
         for zone_out_id, detections_out_zone in enumerate(detections_out_zones):
             for tracker_id in detections_out_zone.tracker_id:
                 if tracker_id in self.tracker_id_to_zone_id:
+                    # TODO: Track exit time and calculate durations to get from zone in to zone out
                     zone_in_id = self.tracker_id_to_zone_id[tracker_id]
                     self.counts.setdefault(zone_out_id, {})
                     self.counts[zone_out_id].setdefault(zone_in_id, set())
@@ -122,15 +127,19 @@ class VideoProcessor:
     ) -> np.ndarray:
         annotated_frame = frame.copy()
         for i, (zone_in, zone_out) in enumerate(zip(self.zones_in, self.zones_out)):
+            # Annotate zone in polygons
             annotated_frame = sv.draw_polygon(
                 annotated_frame, zone_in.polygon, COLORS.colors[i]
             )
+            # Annotate zone out polygons
             annotated_frame = sv.draw_polygon(
                 annotated_frame, zone_out.polygon, COLORS.colors[i]
             )
 
         labels = [f"#{tracker_id}" for tracker_id in detections.tracker_id]
+        # Draws path of detections
         annotated_frame = self.trace_annotator.annotate(annotated_frame, detections)
+        # Draws bounding boxes around detections
         annotated_frame = self.bounding_box_annotator.annotate(
             annotated_frame, detections
         )
@@ -141,9 +150,12 @@ class VideoProcessor:
         for zone_out_id, zone_out in enumerate(self.zones_out):
             zone_center = sv.get_polygon_center(polygon=zone_out.polygon)
             if zone_out_id in self.detections_manager.counts:
+                # Gets the counts for the current zone out
                 counts = self.detections_manager.counts[zone_out_id]
                 for i, zone_in_id in enumerate(counts):
+                    # Gets the counts to the zone out from the current zone in
                     count = len(self.detections_manager.counts[zone_out_id][zone_in_id])
+                    # Offsets to be below the display count from previous zone in
                     text_anchor = sv.Point(x=zone_center.x, y=zone_center.y + 40 * i)
                     annotated_frame = sv.draw_text(
                         scene=annotated_frame,
@@ -158,22 +170,33 @@ class VideoProcessor:
         results = self.model(
             frame, verbose=False, conf=self.conf_threshold, iou=self.iou_threshold
         )[0]
+        # This is really the main Detections call
         detections = sv.Detections.from_ultralytics(results)
         detections.class_id = np.zeros(len(detections))
+        # ByteTrack update
         detections = self.tracker.update_with_detections(detections)
 
         detections_in_zones = []
         detections_out_zones = []
 
         for zone_in, zone_out in zip(self.zones_in, self.zones_out):
+            # trigger returns boolean array if each detection is within the polygon zone
+            # detections[] __getitem__ returns detections that are within the polygon zone. __getitem__ is an overloaded function.
             detections_in_zone = detections[zone_in.trigger(detections=detections)]
             detections_in_zones.append(detections_in_zone)
             detections_out_zone = detections[zone_out.trigger(detections=detections)]
             detections_out_zones.append(detections_out_zone)
 
+        # not sure why we need to feed it through this update() function?
         detections = self.detections_manager.update(
             detections, detections_in_zones, detections_out_zones
         )
+        # At this point, all of the metrics should be ready to upload to whatever metric ingestion:
+        #   - zone_in_id
+        #   - zone_out_id
+        #   - tracker_id
+        #   - class_id
+        #   - counts to each zone out from each zone in
         return self.annotate_frame(frame, detections)
 
 

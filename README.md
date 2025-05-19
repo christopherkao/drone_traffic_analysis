@@ -106,6 +106,15 @@ This repository contains a real-time traffic analysis system leveraging YOLOv8 f
   --target_video_path data/traffic_analysis_result.mov
   ```
 
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/bay_ralmar_drone.mp4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/bay_ralmar_drone_result.mp4
+  ```
+
 - inference
 
   ```bash
@@ -117,7 +126,6 @@ This repository contains a real-time traffic analysis system leveraging YOLOv8 f
   --target_video_path data/traffic_analysis_result.mov
   ```
 
-
 ## Results
 
 The following is a demonstration of the system in action:
@@ -125,6 +133,7 @@ The following is a demonstration of the system in action:
 ![Working Video][(link-to-the-video)](https://drive.google.com/file/d/1s0nyyijHFbfrtuI2fHo9CvxHWwAUX5nm/view?usp=sharing)
 
 **Key Results**:
+
 - Real-time detection and aerial view tracking of vehicles.
 - Visualization of vehicle trajectories.
 - Accurate counting of vehicles entering specific zones.
