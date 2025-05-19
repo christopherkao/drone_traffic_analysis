@@ -115,6 +115,24 @@ This repository contains a real-time traffic analysis system leveraging YOLOv8 f
   --target_video_path data/bay_ralmar_drone_result.mp4
   ```
 
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/east_bayshore_laura_drone.mp4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/east_bayshore_laura_drone_result.mp4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/east_bayshore_laura_drone_full.mp4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/east_bayshore_laura_drone_full_result.mp4
+  ```
+
 - inference
 
   ```bash
