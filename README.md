@@ -127,10 +127,164 @@ This repository contains a real-time traffic analysis system leveraging YOLOv8 f
   ```bash
   python ultralytics_example.py \
   --source_weights_path data/traffic_analysis.pt \
-  --source_video_path data/east_bayshore_laura_drone_full.mp4 \
+  --source_video_path data/DJI_0003.MP4 \
   --confidence_threshold 0.3 \
   --iou_threshold 0.5 \
-  --target_video_path data/east_bayshore_laura_drone_full_result.mp4
+  --target_video_path data/DJI_0003_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0009_combined.mp4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0009_combined_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/yolo11_vehicles_weights.pt \
+  --source_video_path data/DJI_0009_combined.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0009_combined_yolo11_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0009_keep_clear.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0009_keep_clear_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/yolo11_vehicles_weights.pt \
+  --source_video_path data/DJI_0009_keep_clear.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0009_keep_clear_yolo11_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0009_keep_clear.MP4 \
+  --confidence_threshold 0.2 \
+  --iou_threshold 0.4 \
+  --target_video_path data/DJI_0009_keep_clear_result_02_04.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0009_keep_clear.MP4 \
+  --confidence_threshold 0.1 \
+  --iou_threshold 0.4 \
+  --target_video_path data/DJI_0009_keep_clear_result_01_04.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0009_keep_clear.MP4 \
+  --confidence_threshold 0.01 \
+  --iou_threshold 0.4 \
+  --target_video_path data/DJI_0009_keep_clear_result_001_04.MP4
+  ```
+
+  <!-- Try without custom weights -->
+
+  ```bash
+  python ultralytics_example.py \
+  --source_video_path data/DJI_0009_keep_clear.MP4 \
+  --confidence_threshold 0.01 \
+  --iou_threshold 0.4 \
+  --target_video_path data/DJI_0009_keep_clear_result_no_weights.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0016.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0016_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0020.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0020_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0022.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0022_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0024.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0024_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0026.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0026_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0029_combined.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0029_combined_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0032.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0032_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0033.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0033_result.MP4
+  ```
+
+  ```bash
+  python ultralytics_example.py \
+  --source_weights_path data/traffic_analysis.pt \
+  --source_video_path data/DJI_0035.MP4 \
+  --confidence_threshold 0.3 \
+  --iou_threshold 0.5 \
+  --target_video_path data/DJI_0035_result.MP4
   ```
 
 - inference
